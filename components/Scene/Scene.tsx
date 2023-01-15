@@ -4,10 +4,10 @@ import { useFrame } from "@react-three/fiber"
 import { useControls } from "leva"
 import { useGLTF, OrbitControls } from "@react-three/drei"
 
-useGLTF.preload("/assets/art_gallery/scene.gltf")
+useGLTF.preload("/assets/art_gallery/scene.glb")
 
 const Scene = () => {
-  const scene = useGLTF("/assets/art_gallery/scene.gltf")
+  const scene = useGLTF("/assets/art_gallery/scene.glb")
 
   // useFrame(({ camera }) => {
   //   console.log(camera)
