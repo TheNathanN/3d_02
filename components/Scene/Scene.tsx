@@ -4,6 +4,8 @@ import { useFrame } from "@react-three/fiber"
 import { useControls } from "leva"
 import { useGLTF, OrbitControls } from "@react-three/drei"
 
+useGLTF.preload("/assets/art_gallery/scene.gltf")
+
 const Scene = () => {
   const scene = useGLTF("/assets/art_gallery/scene.gltf")
 
