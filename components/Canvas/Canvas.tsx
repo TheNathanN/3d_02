@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber"
-import Scene from "../Scene"
+import Experience from "../Experience"
 
 const CanvasComp = () => {
   return (
@@ -12,7 +12,7 @@ const CanvasComp = () => {
       }}
     >
       <ambientLight />
-      <Scene />
+      <Experience />
     </Canvas>
   )
 }

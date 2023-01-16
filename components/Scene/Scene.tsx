@@ -1,67 +1,109 @@
-import React from "react"
+import { useGLTF, useScroll } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
-import { useGLTF, OrbitControls } from "@react-three/drei"
-import Box from "../Box"
 import { useControls } from "leva"
+import { Suspense } from "react"
 
 useGLTF.preload("/assets/scene.glb")
 
-const Scene = () => {
+const Experience = () => {
   const scene = useGLTF("/assets/scene.glb")
+  const scroll = useScroll()
+
   const { rotationX, rotationY, rotationZ, positionX, positionY, positionZ } =
     useControls("Camera", {
       rotationX: {
-        value: -0.5,
-        min: -Math.PI,
-        max: Math.PI,
+        value: 6.3,
+        min: -Math.PI * 2,
+        max: Math.PI * 2,
         step: 0.1,
       },
       rotationY: {
-        value: 0.8,
-        min: -Math.PI,
-        max: Math.PI,
+        value: 0.84,
+        min: -Math.PI * 2,
+        max: Math.PI * 2,
         step: 0.01,
       },
       rotationZ: {
-        value: 0.38,
-        min: -Math.PI,
-        max: Math.PI,
+        value: 6.28,
+        min: -Math.PI * 2,
+        max: Math.PI * 2,
         step: 0.01,
       },
       positionX: {
-        value: 5.559419082866227,
+        value: 5.6,
         min: -10,
         max: 10,
         step: 0.01,
       },
       positionY: {
-        value: 2.9919200717879257,
+        value: 2.0,
         min: -10,
         max: 10,
         step: 0.1,
       },
       positionZ: {
-        value: 4.831241119392819,
+        value: 4.8,
         min: -10,
         max: 10,
         step: 0.1,
       },
     })
 
+  const offsetCheckpoints = [0.0, 0.2, 0.4, 0.6, 0.8, 1]
+
+  const cameraCheckpoints = [
+    {
+      rotation: { x: 6.3, y: 0.84, z: 6.28 },
+      position: { x: 5.6, y: 2.0, z: 4.8 },
+    },
+    {
+      rotation: { x: 6.3, y: 0.84, z: 6.28 },
+      position: { x: 0.38, y: 2.0, z: 0.42 },
+    },
+    {
+      rotation: { x: 6.3, y: 1.64, z: 6.28 },
+      position: { x: 0.32, y: 2.0, z: 0.1 },
+    },
+    {
+      rotation: { x: 6.3, y: 0.16, z: 6.28 },
+      position: { x: 0.32, y: 2.0, z: 0.1 },
+    },
+    {
+      rotation: { x: 6.3, y: -1.44, z: 6.28 },
+      position: { x: 0.32, y: 2.0, z: 0.1 },
+    },
+    {
+      rotation: { x: 6.3, y: -2.86, z: 6.28 },
+      position: { x: 0.32, y: 2.0, z: 0.1 },
+    },
+  ]
+
   useFrame(({ camera }) => {
-    camera.position.set(positionX, positionY, positionZ)
-    camera.rotation.set(rotationX, rotationY, rotationZ)
+    // Pages
+    const { offset, pages } = scroll
+    const currentPage = Math.floor(offset * pages) ?? 0
+    const nextPage = currentPage + 1 < pages ? currentPage + 1 : currentPage
+    const { position, rotation } = cameraCheckpoints[currentPage]
+
+    // Control the camera with scroll position
+    if (currentPage === 0) {
+      const offsetPos = -offset * 27
+      const newX = position.x + offsetPos
+      const newZ = position.z + offsetPos
+      if (
+        cameraCheckpoints[currentPage + 1] &&
+        newX !== cameraCheckpoints[nextPage].position.x
+      ) {
+        camera.rotation.set(rotationX, rotationY, rotationZ)
+        camera.position.set(newX, position.y, newZ)
+      }
+    } else {
+      camera.rotation.set(rotationX, rotationY, rotationZ)
+      camera.position.set(positionX, positionY, positionZ)
+    }
   })
 
-  return (
-    <>
-      <color attach="background" args={["black"]} />
-      {/* <ambientLight /> */}
-      {/* <pointLight position={[10, 10, 10]} /> */}
-      {/* <Box position={[-1.2, 0, 0]} /> */}
-      <primitive object={scene.scene} />
-    </>
-  )
+  return <primitive object={scene.scene} />
 }
 
-export default Scene
+export default Experience
