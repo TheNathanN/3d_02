@@ -1,7 +1,7 @@
 import { useGLTF, useScroll } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 import { useControls } from "leva"
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
 
 useGLTF.preload("/assets/scene.glb")
 
@@ -81,26 +81,15 @@ const Experience = () => {
   useFrame(({ camera }) => {
     // Pages
     const { offset, pages } = scroll
-    const currentPage = Math.floor(offset * pages) ?? 0
-    const nextPage = currentPage + 1 < pages ? currentPage + 1 : currentPage
-    const { position, rotation } = cameraCheckpoints[currentPage]
+    const { position, rotation } = cameraCheckpoints[0]
 
     // Control the camera with scroll position
-    if (currentPage === 0) {
-      const offsetPos = -offset * 27
-      const newX = position.x + offsetPos
-      const newZ = position.z + offsetPos
-      if (
-        cameraCheckpoints[currentPage + 1] &&
-        newX !== cameraCheckpoints[nextPage].position.x
-      ) {
-        camera.rotation.set(rotationX, rotationY, rotationZ)
-        camera.position.set(newX, position.y, newZ)
-      }
-    } else {
-      camera.rotation.set(rotationX, rotationY, rotationZ)
-      camera.position.set(positionX, positionY, positionZ)
-    }
+    const offsetPos = -offset * 27
+    const newX = position.x + offsetPos
+    const newZ = position.z + offsetPos
+
+    camera.rotation.set(rotationX, rotationY, rotationZ)
+    camera.position.set(newX, position.y, newZ)
   })
 
   return <primitive object={scene.scene} />
