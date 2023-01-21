@@ -69,31 +69,50 @@ const Experience = () => {
       },
     }
 
+    /* 
+      TODO:
+      #1: Debug positionForward
+      #2: Debug rotationForward
+      #3: Debug positionBackward
+      #4: Debug rotationBackward
+
+      Issues with the current implementation:
+      - Not able to properly track checkpoints
+    */
+
     const positionForward =
       +cameraPosition.position.x >= +nextCheckpoint.position.x &&
       +cameraPosition.position.y >= +nextCheckpoint.position.y &&
       +cameraPosition.position.z >= +nextCheckpoint.position.z
+
+    console.log("positionForward: ", positionForward)
 
     const rotationForward =
       +cameraPosition.rotation.x >= +nextCheckpoint.rotation.x &&
       +cameraPosition.rotation.y >= +nextCheckpoint.rotation.y &&
       +cameraPosition.rotation.z >= +nextCheckpoint.rotation.z
 
-    // const positionBackward =
-    //   +cameraPosition.position.x <= +previousCheckpoint.position.x &&
-    //   +cameraPosition.position.y <= +previousCheckpoint.position.y &&
-    //   +cameraPosition.position.z <= +previousCheckpoint.position.z
+    // console.log("rotationForward: ", rotationForward)
 
-    // const rotationBackward =
-    //   +cameraPosition.rotation.x <= +previousCheckpoint.rotation.x &&
-    //   +cameraPosition.rotation.y <= +previousCheckpoint.rotation.y &&
-    //   +cameraPosition.rotation.z <= +previousCheckpoint.rotation.z
+    const positionBackward =
+      +cameraPosition.position.x <= +previousCheckpoint.position.x &&
+      +cameraPosition.position.y <= +previousCheckpoint.position.y &&
+      +cameraPosition.position.z <= +previousCheckpoint.position.z
 
-    if (positionForward && rotationForward) {
-      setScrollCheckpoint(offset)
-      setCameraCheckpoint(nextCheckpoint)
-      setPointer(pointer + 1)
-    }
+    // console.log("positionBackward: ", positionBackward)
+
+    const rotationBackward =
+      +cameraPosition.rotation.x <= +previousCheckpoint.rotation.x &&
+      +cameraPosition.rotation.y <= +previousCheckpoint.rotation.y &&
+      +cameraPosition.rotation.z <= +previousCheckpoint.rotation.z
+
+    // console.log("rotationBackward: ", rotationBackward)
+
+    // if (positionForward && rotationForward) {
+    //   setScrollCheckpoint(offset)
+    //   setCameraCheckpoint(nextCheckpoint)
+    //   setPointer(pointer + 1)
+    // }
     // } else if (positionBackward && rotationBackward) {
     //   setScrollCheckpoint(offset)
     //   setCameraCheckpoint(previousCheckpoint)

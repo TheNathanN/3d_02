@@ -1,6 +1,7 @@
 import { create } from "zustand"
 import { CameraPosition } from "./types"
 
+// Store Types
 interface CameraStore {
   position: CameraPosition
   setPosition: (position: CameraPosition) => void
@@ -16,6 +17,7 @@ interface PointerStore {
   setPointer: (pointer: number) => void
 }
 
+// Store
 export const useCameraStore = create<CameraStore>((set) => ({
   position: {
     rotation: { x: 6.3, y: 0.84, z: 6.28 },
