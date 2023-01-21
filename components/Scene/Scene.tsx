@@ -70,54 +70,29 @@ const Experience = () => {
     }
 
     /* 
-      TODO:
-      #1: Debug positionForward
-      #2: Debug rotationForward
-      #3: Debug positionBackward
-      #4: Debug rotationBackward
+    TODO:
+    #1: Set a checker that notices when the camera has crossed a checkpoint going FORWARD
+    #2: Set a checker that notices when the camera has crossed a checkpoint going BACKWARD
+    #3: Write logic that handles the checkpoints whenever the checkers change state
 
       Issues with the current implementation:
       - Not able to properly track checkpoints
     */
 
-    const positionForward =
-      +cameraPosition.position.x >= +nextCheckpoint.position.x &&
-      +cameraPosition.position.y >= +nextCheckpoint.position.y &&
-      +cameraPosition.position.z >= +nextCheckpoint.position.z
+    console.log("cameraPositionX", cameraPosition.position.x)
+    console.log("nextCheckpointX", nextCheckpoint.position.x)
 
-    console.log("positionForward: ", positionForward)
+    // Checks if the camera has crossed a checkpoint going forward
+    const checkpointCrossedGoingForward =
+      cameraPosition.position.x <= nextCheckpoint.position.x
 
-    const rotationForward =
-      +cameraPosition.rotation.x >= +nextCheckpoint.rotation.x &&
-      +cameraPosition.rotation.y >= +nextCheckpoint.rotation.y &&
-      +cameraPosition.rotation.z >= +nextCheckpoint.rotation.z
-
-    // console.log("rotationForward: ", rotationForward)
-
-    const positionBackward =
-      +cameraPosition.position.x <= +previousCheckpoint.position.x &&
-      +cameraPosition.position.y <= +previousCheckpoint.position.y &&
-      +cameraPosition.position.z <= +previousCheckpoint.position.z
-
-    // console.log("positionBackward: ", positionBackward)
-
-    const rotationBackward =
-      +cameraPosition.rotation.x <= +previousCheckpoint.rotation.x &&
-      +cameraPosition.rotation.y <= +previousCheckpoint.rotation.y &&
-      +cameraPosition.rotation.z <= +previousCheckpoint.rotation.z
-
-    // console.log("rotationBackward: ", rotationBackward)
-
-    // if (positionForward && rotationForward) {
-    //   setScrollCheckpoint(offset)
-    //   setCameraCheckpoint(nextCheckpoint)
-    //   setPointer(pointer + 1)
-    // }
-    // } else if (positionBackward && rotationBackward) {
-    //   setScrollCheckpoint(offset)
-    //   setCameraCheckpoint(previousCheckpoint)
-    //   setPointer(pointer - 1)
-    // }
+    //  Logic when the camera has crossed a checkpoint going forward
+    if (checkpointCrossedGoingForward) {
+      console.log("checkpointCrossedGoingForward")
+      // setScrollCheckpoint(offset)
+      // setCameraCheckpoint(nextCheckpoint)
+      // setPointer(pointer + 1)
+    }
 
     console.log(pointer)
 
