@@ -51,41 +51,54 @@ const Experience = () => {
     const offsetRef = offset - scrollCheckpoint
 
     // Check if we've reached a new checkpoint
-    if (cameraCheckpoints[pointer + 1]) {
-      const nextCheckpoint = cameraCheckpoints[pointer + 1]
+    const nextCheckpoint =
+      cameraCheckpoints[pointer + 1] ?? cameraCheckpoints[pointer - 1]
+    const previousCheckpoint =
+      cameraCheckpoints[pointer - 1] ?? cameraCheckpoints[pointer + 1]
 
-      const cameraPosition: CameraPosition = {
-        rotation: {
-          x: +camera.rotation.x.toFixed(2),
-          y: +camera.rotation.y.toFixed(2),
-          z: +camera.rotation.z.toFixed(2),
-        },
-        position: {
-          x: +camera.position.x.toFixed(2),
-          y: +camera.position.y.toFixed(2),
-          z: +camera.position.z.toFixed(2),
-        },
-      }
-
-      const positionHit =
-        +cameraPosition.position.x == +nextCheckpoint.position.x &&
-        +cameraPosition.position.y == +nextCheckpoint.position.y &&
-        +cameraPosition.position.z == +nextCheckpoint.position.z
-
-      const rotationHit =
-        +cameraPosition.rotation.x == +nextCheckpoint.rotation.x &&
-        +cameraPosition.rotation.y == +nextCheckpoint.rotation.y &&
-        +cameraPosition.rotation.z == +nextCheckpoint.rotation.z
-
-      if (positionHit && rotationHit) {
-        setScrollCheckpoint(offset)
-        setCameraCheckpoint(nextCheckpoint)
-
-        if (pointer === cameraCheckpoints.indexOf(cameraPosition)) {
-          setPointer(pointer - 1)
-        } else setPointer(pointer + 1)
-      }
+    const cameraPosition: CameraPosition = {
+      rotation: {
+        x: +camera.rotation.x.toFixed(2),
+        y: +camera.rotation.y.toFixed(2),
+        z: +camera.rotation.z.toFixed(2),
+      },
+      position: {
+        x: +camera.position.x.toFixed(2),
+        y: +camera.position.y.toFixed(2),
+        z: +camera.position.z.toFixed(2),
+      },
     }
+
+    const positionForward =
+      +cameraPosition.position.x >= +nextCheckpoint.position.x &&
+      +cameraPosition.position.y >= +nextCheckpoint.position.y &&
+      +cameraPosition.position.z >= +nextCheckpoint.position.z
+
+    const rotationForward =
+      +cameraPosition.rotation.x >= +nextCheckpoint.rotation.x &&
+      +cameraPosition.rotation.y >= +nextCheckpoint.rotation.y &&
+      +cameraPosition.rotation.z >= +nextCheckpoint.rotation.z
+
+    // const positionBackward =
+    //   +cameraPosition.position.x <= +previousCheckpoint.position.x &&
+    //   +cameraPosition.position.y <= +previousCheckpoint.position.y &&
+    //   +cameraPosition.position.z <= +previousCheckpoint.position.z
+
+    // const rotationBackward =
+    //   +cameraPosition.rotation.x <= +previousCheckpoint.rotation.x &&
+    //   +cameraPosition.rotation.y <= +previousCheckpoint.rotation.y &&
+    //   +cameraPosition.rotation.z <= +previousCheckpoint.rotation.z
+
+    if (positionForward && rotationForward) {
+      setScrollCheckpoint(offset)
+      setCameraCheckpoint(nextCheckpoint)
+      setPointer(pointer + 1)
+    }
+    // } else if (positionBackward && rotationBackward) {
+    //   setScrollCheckpoint(offset)
+    //   setCameraCheckpoint(previousCheckpoint)
+    //   setPointer(pointer - 1)
+    // }
 
     console.log(pointer)
 
