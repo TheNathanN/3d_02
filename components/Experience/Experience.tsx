@@ -7,7 +7,7 @@ const Exerience = () => {
     <>
       <color attach="background" args={["black"]} />
 
-      <ScrollControls pages={5}>
+      <ScrollControls pages={10}>
         <Scene />
       </ScrollControls>
     </>

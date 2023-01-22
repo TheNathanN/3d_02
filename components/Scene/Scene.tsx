@@ -20,27 +20,27 @@ const Experience = () => {
   const cameraCheckpoints: CameraPosition[] = [
     {
       rotation: { x: 6.3, y: 0.84, z: 6.28 },
-      position: { x: 5.6, y: 2.0, z: 4.8 },
+      position: { x: 5, y: 2.0, z: 4.8 },
     },
     {
       rotation: { x: 6.3, y: 0.84, z: 6.28 },
-      position: { x: 0.38, y: 2.0, z: -0.42 },
+      position: { x: 0.4, y: 2.0, z: -0.42 },
     },
     {
       rotation: { x: 6.3, y: 1.64, z: 6.28 },
-      position: { x: 0.32, y: 2.0, z: -0.1 },
+      position: { x: 0.32, y: 2.0, z: -0.42 },
     },
     {
       rotation: { x: 6.3, y: 0.16, z: 6.28 },
-      position: { x: 0.32, y: 2.0, z: -0.1 },
+      position: { x: 0.32, y: 2.0, z: -0.42 },
     },
     {
       rotation: { x: 6.3, y: -1.44, z: 6.28 },
-      position: { x: 0.32, y: 2.0, z: -0.1 },
+      position: { x: 0.32, y: 2.0, z: -0.42 },
     },
     {
       rotation: { x: 6.3, y: -2.86, z: 6.28 },
-      position: { x: 0.32, y: 2.0, z: -0.1 },
+      position: { x: 0.32, y: 2.0, z: -0.42 },
     },
   ]
 
@@ -53,12 +53,8 @@ const Experience = () => {
     const nextCheckpoint =
       cameraCheckpoints[currentScene + 1] ?? cameraCheckpoints[currentScene - 1]
 
-    console.log("nextCheckpoint: ", nextCheckpoint)
-
-    const previousCheckpoint =
-      cameraCheckpoints[currentScene - 1] ?? cameraCheckpoints[currentScene + 1]
-
-    console.log("previousCheckpoint: ", previousCheckpoint)
+    // const previousCheckpoint =
+    //   cameraCheckpoints[currentScene - 1] ?? cameraCheckpoints[currentScene + 1]
 
     const cameraPosition: CameraPosition = {
       rotation: {
@@ -77,7 +73,7 @@ const Experience = () => {
     if (currentScene === 0) {
       // Control the camera with scroll position
       /* SPEED */
-      const offsetPos = -offsetRef * 15
+      const offsetPos = -offsetRef * 30
       /* POSITION */
       const newPositionX = cameraCheckpoint.position.x + offsetPos
       const newPositionZ = cameraCheckpoint.position.z + offsetPos
@@ -88,11 +84,7 @@ const Experience = () => {
 
       // Check if the camera has reached the next checkpoint
       if (
-        cameraPosition.rotation.x <= nextCheckpoint.rotation.x &&
-        cameraPosition.rotation.y <= nextCheckpoint.rotation.y &&
-        cameraPosition.rotation.z <= nextCheckpoint.rotation.z &&
         cameraPosition.position.x <= nextCheckpoint.position.x &&
-        cameraPosition.position.y <= nextCheckpoint.position.y &&
         cameraPosition.position.z <= nextCheckpoint.position.z
       ) {
         setScene(1)
@@ -102,33 +94,37 @@ const Experience = () => {
     } else if (currentScene === 1) {
       // Control the camera with scroll position
       /* SPEED */
-      const offsetPos = -offsetRef * 5
+      const offsetPos = -offsetRef * 10
       /* ROTATION */
       const newRotationY = cameraCheckpoint.rotation.y - offsetPos
       /* POSITION */
       const newPositionX = cameraCheckpoint.position.x + offsetPos
-      const newPositionZ = cameraCheckpoint.position.z - offsetPos
 
       // Set the camera position and rotation based on new values controlled by scroll
       camera.rotation.set(rotation.x, newRotationY, rotation.z)
-      camera.position.set(newPositionX, position.y, newPositionZ)
+      camera.position.set(newPositionX, position.y, position.z)
 
       // Check if the camera has reached the next checkpoint
       if (
-        cameraPosition.rotation.x >= nextCheckpoint.rotation.x &&
         cameraPosition.rotation.y >= nextCheckpoint.rotation.y &&
-        cameraPosition.rotation.z >= nextCheckpoint.rotation.z &&
         cameraPosition.position.x <= nextCheckpoint.position.x &&
-        cameraPosition.position.y <= nextCheckpoint.position.y &&
         cameraPosition.position.z >= nextCheckpoint.position.z
       ) {
         setScene(2)
         setScrollCheckpoint(offset)
         setCameraCheckpoint(nextCheckpoint)
       }
-    }
+    } else if (currentScene === 2) {
+      // Control the camera with scroll position
+      /* SPEED */
+      const offsetPos = -offsetRef * 10
+      /* ROTATION */
+      const newRotationY = cameraCheckpoint.rotation.y - offsetPos
 
-    console.log(currentScene)
+      // Set the camera position and rotation based on new values controlled by scroll
+      camera.rotation.set(rotation.x, newRotationY, rotation.z)
+      camera.position.set(position.x, position.y, position.z)
+    }
   })
 
   return (
