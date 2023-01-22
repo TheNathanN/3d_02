@@ -4,6 +4,7 @@ import { useControls } from "leva"
 import { Suspense } from "react"
 import { CameraPosition } from "@/types"
 import { useScrollStore, useCameraStore, useSceneStore } from "@/state"
+import { cameraCheckpoints } from "@/helpers/cameraCheckpoints"
 
 useGLTF.preload("/assets/scene.glb")
 
@@ -17,36 +18,9 @@ const Experience = () => {
   const currentScene = useSceneStore((state) => state.scene)
   const setScene = useSceneStore((state) => state.setScene)
 
-  const cameraCheckpoints: CameraPosition[] = [
-    {
-      rotation: { x: 6.3, y: 0.84, z: 6.28 },
-      position: { x: 5, y: 2.0, z: 4.8 },
-    },
-    {
-      rotation: { x: 6.3, y: 0.84, z: 6.28 },
-      position: { x: 0.4, y: 2.0, z: -0.42 },
-    },
-    {
-      rotation: { x: 6.3, y: 1.64, z: 6.28 },
-      position: { x: 0.32, y: 2.0, z: -0.42 },
-    },
-    {
-      rotation: { x: 6.3, y: 0.16, z: 6.28 },
-      position: { x: 0.32, y: 2.0, z: -0.42 },
-    },
-    {
-      rotation: { x: 6.3, y: -1.44, z: 6.28 },
-      position: { x: 0.32, y: 2.0, z: -0.42 },
-    },
-    {
-      rotation: { x: 6.3, y: -2.86, z: 6.28 },
-      position: { x: 0.32, y: 2.0, z: -0.42 },
-    },
-  ]
-
   useFrame(({ camera }) => {
     // Pages
-    const { offset, pages } = scroll
+    const { offset } = scroll
     const { position, rotation } = cameraCheckpoints[currentScene]
     const offsetRef = offset - scrollCheckpoint
 
@@ -123,7 +97,11 @@ const Experience = () => {
 
       // Set the camera position and rotation based on new values controlled by scroll
       camera.rotation.set(rotation.x, newRotationY, rotation.z)
-      camera.position.set(position.x, position.y, position.z)
+      camera.position.set(
+        cameraPosition.position.x,
+        cameraPosition.position.y,
+        cameraPosition.position.z
+      )
     }
   })
 
