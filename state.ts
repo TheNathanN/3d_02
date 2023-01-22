@@ -12,9 +12,14 @@ interface ScrollStore {
   setOffset: (offset: number) => void
 }
 
-interface PointerStore {
-  pointer: number
-  setPointer: (pointer: number) => void
+interface SceneStore {
+  scene: number
+  setScene: (scene: number) => void
+}
+
+interface CheckpointCrossedStore {
+  checkpointCrossed: boolean
+  setCheckpointCrossed: (checkpointCrossed: boolean) => void
 }
 
 // Store
@@ -31,7 +36,15 @@ export const useScrollStore = create<ScrollStore>((set) => ({
   setOffset: (offset: number) => set({ offset }),
 }))
 
-export const usePointerStore = create<PointerStore>((set) => ({
-  pointer: 0,
-  setPointer: (pointer: number) => set({ pointer }),
+export const useSceneStore = create<SceneStore>((set) => ({
+  scene: 0,
+  setScene: (scene: number) => set({ scene }),
 }))
+
+export const useCheckpointCrossedStore = create<CheckpointCrossedStore>(
+  (set) => ({
+    checkpointCrossed: false,
+    setCheckpointCrossed: (checkpointCrossed: boolean) =>
+      set({ checkpointCrossed }),
+  })
+)

@@ -3,7 +3,12 @@ import { useFrame } from "@react-three/fiber"
 import { useControls } from "leva"
 import { Suspense } from "react"
 import { CameraPosition } from "@/types"
-import { useScrollStore, useCameraStore, usePointerStore } from "@/state"
+import {
+  useScrollStore,
+  useCameraStore,
+  useSceneStore,
+  useCheckpointCrossedStore,
+} from "@/state"
 
 useGLTF.preload("/assets/scene.glb")
 
@@ -14,8 +19,14 @@ const Experience = () => {
   const setCameraCheckpoint = useCameraStore((state) => state.setPosition)
   const scrollCheckpoint = useScrollStore((state) => state.offset)
   const setScrollCheckpoint = useScrollStore((state) => state.setOffset)
-  const pointer = usePointerStore((state) => state.pointer)
-  const setPointer = usePointerStore((state) => state.setPointer)
+  const currentScene = useSceneStore((state) => state.scene)
+  const setScene = useSceneStore((state) => state.setScene)
+  const checkpointCrossed = useCheckpointCrossedStore(
+    (state) => state.checkpointCrossed
+  )
+  const setCheckpointCrossed = useCheckpointCrossedStore(
+    (state) => state.setCheckpointCrossed
+  )
 
   const cameraCheckpoints: CameraPosition[] = [
     {
@@ -47,14 +58,18 @@ const Experience = () => {
   useFrame(({ camera }) => {
     // Pages
     const { offset, pages } = scroll
-    const { position, rotation } = cameraCheckpoints[pointer]
+    const { position, rotation } = cameraCheckpoints[currentScene]
     const offsetRef = offset - scrollCheckpoint
 
-    // Check if we've reached a new checkpoint
     const nextCheckpoint =
-      cameraCheckpoints[pointer + 1] ?? cameraCheckpoints[pointer - 1]
+      cameraCheckpoints[currentScene + 1] ?? cameraCheckpoints[currentScene - 1]
+
+    console.log("nextCheckpoint: ", nextCheckpoint)
+
     const previousCheckpoint =
-      cameraCheckpoints[pointer - 1] ?? cameraCheckpoints[pointer + 1]
+      cameraCheckpoints[currentScene - 1] ?? cameraCheckpoints[currentScene + 1]
+
+    console.log("previousCheckpoint: ", previousCheckpoint)
 
     const cameraPosition: CameraPosition = {
       rotation: {
@@ -69,44 +84,62 @@ const Experience = () => {
       },
     }
 
-    /* 
-    TODO:
-    #1: Set a checker that notices when the camera has crossed a checkpoint going FORWARD
-    #2: Set a checker that notices when the camera has crossed a checkpoint going BACKWARD
-    #3: Write logic that handles the checkpoints whenever the checkers change state
+    // Check which scene we are in so that the camera knows where to go
+    if (currentScene === 0) {
+      // Control the camera with scroll position
+      /* SPEED */
+      const offsetPos = -offsetRef * 27
+      /* POSITION */
+      const newPositionX = cameraCheckpoint.position.x + offsetPos
+      const newPositionZ = cameraCheckpoint.position.z + offsetPos
 
-      Issues with the current implementation:
-      - Not able to properly track checkpoints
-    */
+      // Set the camera position and rotation based on new values controlled by scroll
+      camera.rotation.set(rotation.x, rotation.y, rotation.z)
+      camera.position.set(newPositionX, position.y, newPositionZ)
 
-    console.log("cameraPositionX", cameraPosition.position.x)
-    console.log("nextCheckpointX", nextCheckpoint.position.x)
+      // Check if the camera has reached the next checkpoint
+      if (
+        cameraPosition.rotation.x <= nextCheckpoint.rotation.x &&
+        cameraPosition.rotation.y <= nextCheckpoint.rotation.y &&
+        cameraPosition.rotation.z <= nextCheckpoint.rotation.z &&
+        cameraPosition.position.x <= nextCheckpoint.position.x &&
+        cameraPosition.position.y <= nextCheckpoint.position.y &&
+        cameraPosition.position.z <= nextCheckpoint.position.z
+      ) {
+        setScene(1)
+        setScrollCheckpoint(offset)
+        setCameraCheckpoint(nextCheckpoint)
+      }
+    } else if (currentScene === 1) {
+      // Control the camera with scroll position
+      /* SPEED */
+      const offsetPos = -offsetRef * 10
+      /* ROTATION */
+      const newRotationY = cameraCheckpoint.rotation.y - offsetPos
+      /* POSITION */
+      const newPositionX = cameraCheckpoint.position.x + offsetPos
+      const newPositionZ = cameraCheckpoint.position.z - offsetPos
 
-    // Checks if the camera has crossed a checkpoint going forward
-    const checkpointCrossedGoingForward =
-      cameraPosition.position.x <= nextCheckpoint.position.x
+      // Set the camera position and rotation based on new values controlled by scroll
+      camera.rotation.set(rotation.x, newRotationY, rotation.z)
+      camera.position.set(newPositionX, position.y, newPositionZ)
 
-    //  Logic when the camera has crossed a checkpoint going forward
-    if (checkpointCrossedGoingForward) {
-      console.log("checkpointCrossedGoingForward")
-      // setScrollCheckpoint(offset)
-      // setCameraCheckpoint(nextCheckpoint)
-      // setPointer(pointer + 1)
+      // Check if the camera has reached the next checkpoint
+      if (
+        cameraPosition.rotation.x >= nextCheckpoint.rotation.x &&
+        cameraPosition.rotation.y >= nextCheckpoint.rotation.y &&
+        cameraPosition.rotation.z >= nextCheckpoint.rotation.z &&
+        cameraPosition.position.x <= nextCheckpoint.position.x &&
+        cameraPosition.position.y <= nextCheckpoint.position.y &&
+        cameraPosition.position.z >= nextCheckpoint.position.z
+      ) {
+        setScene(2)
+        setScrollCheckpoint(offset)
+        setCameraCheckpoint(nextCheckpoint)
+      }
     }
 
-    console.log(pointer)
-
-    // Control the camera with scroll position
-    const offsetPos = -offsetRef * 27
-    const newX = cameraCheckpoint.position.x + offsetPos
-    const newZ = cameraCheckpoint.position.z + offsetPos
-
-    camera.rotation.set(
-      cameraCheckpoint.rotation.x,
-      cameraCheckpoint.rotation.y,
-      cameraCheckpoint.rotation.z
-    )
-    camera.position.set(newX, cameraCheckpoint.position.y, newZ)
+    console.log(currentScene)
   })
 
   return <primitive object={scene.scene} />
