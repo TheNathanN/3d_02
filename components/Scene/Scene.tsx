@@ -3,12 +3,7 @@ import { useFrame } from "@react-three/fiber"
 import { useControls } from "leva"
 import { Suspense } from "react"
 import { CameraPosition } from "@/types"
-import {
-  useScrollStore,
-  useCameraStore,
-  useSceneStore,
-  useCheckpointCrossedStore,
-} from "@/state"
+import { useScrollStore, useCameraStore, useSceneStore } from "@/state"
 
 useGLTF.preload("/assets/scene.glb")
 
@@ -21,12 +16,6 @@ const Experience = () => {
   const setScrollCheckpoint = useScrollStore((state) => state.setOffset)
   const currentScene = useSceneStore((state) => state.scene)
   const setScene = useSceneStore((state) => state.setScene)
-  const checkpointCrossed = useCheckpointCrossedStore(
-    (state) => state.checkpointCrossed
-  )
-  const setCheckpointCrossed = useCheckpointCrossedStore(
-    (state) => state.setCheckpointCrossed
-  )
 
   const cameraCheckpoints: CameraPosition[] = [
     {
@@ -88,7 +77,7 @@ const Experience = () => {
     if (currentScene === 0) {
       // Control the camera with scroll position
       /* SPEED */
-      const offsetPos = -offsetRef * 27
+      const offsetPos = -offsetRef * 15
       /* POSITION */
       const newPositionX = cameraCheckpoint.position.x + offsetPos
       const newPositionZ = cameraCheckpoint.position.z + offsetPos
@@ -113,7 +102,7 @@ const Experience = () => {
     } else if (currentScene === 1) {
       // Control the camera with scroll position
       /* SPEED */
-      const offsetPos = -offsetRef * 10
+      const offsetPos = -offsetRef * 5
       /* ROTATION */
       const newRotationY = cameraCheckpoint.rotation.y - offsetPos
       /* POSITION */
@@ -142,7 +131,11 @@ const Experience = () => {
     console.log(currentScene)
   })
 
-  return <primitive object={scene.scene} />
+  return (
+    <Suspense fallback={null}>
+      <primitive object={scene.scene} />
+    </Suspense>
+  )
 }
 
 export default Experience

@@ -17,11 +17,6 @@ interface SceneStore {
   setScene: (scene: number) => void
 }
 
-interface CheckpointCrossedStore {
-  checkpointCrossed: boolean
-  setCheckpointCrossed: (checkpointCrossed: boolean) => void
-}
-
 // Store
 export const useCameraStore = create<CameraStore>((set) => ({
   position: {
@@ -40,11 +35,3 @@ export const useSceneStore = create<SceneStore>((set) => ({
   scene: 0,
   setScene: (scene: number) => set({ scene }),
 }))
-
-export const useCheckpointCrossedStore = create<CheckpointCrossedStore>(
-  (set) => ({
-    checkpointCrossed: false,
-    setCheckpointCrossed: (checkpointCrossed: boolean) =>
-      set({ checkpointCrossed }),
-  })
-)
