@@ -1,4 +1,4 @@
-import { useGLTF, useScroll } from "@react-three/drei"
+import { useGLTF, useScroll, Loader } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 import { useControls } from "leva"
 import { Suspense } from "react"
@@ -105,11 +105,7 @@ const Experience = () => {
     }
   })
 
-  return (
-    <Suspense fallback={null}>
-      <primitive object={scene.scene} />
-    </Suspense>
-  )
+  return <primitive object={scene.scene} />
 }
 
 export default Experience
