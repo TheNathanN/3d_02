@@ -5,11 +5,9 @@ import { Suspense } from "react"
 import { CameraPosition } from "@/types"
 import { useScrollStore, useCameraStore, useSceneStore } from "@/state"
 import { cameraCheckpoints } from "@/helpers/cameraCheckpoints"
-
-useGLTF.preload("/assets/scene.glb")
+import GLBJSX from "./GLBJSX"
 
 const Experience = () => {
-  const scene = useGLTF("/assets/scene.glb")
   const scroll = useScroll()
   const cameraCheckpoint = useCameraStore((state) => state.position)
   const setCameraCheckpoint = useCameraStore((state) => state.setPosition)
@@ -105,7 +103,7 @@ const Experience = () => {
     }
   })
 
-  return <primitive object={scene.scene} />
+  return <GLBJSX />
 }
 
 export default Experience
