@@ -71,7 +71,16 @@ export default function Model(props) {
           material={materials.Painting}
           rotation={[-Math.PI / 2, 0, 0.1]}
           scale={100}
-        />
+        >
+          <Html
+            wrapperClass="htmlScreen"
+            rotation={[Math.PI / 2, 0, 0.1]}
+            transform
+            distanceFactor={1.5}
+          >
+            <iframe src="https://nathannicholson.dev" frameborder="0"></iframe>
+          </Html>
+        </mesh>
 
         <mesh
           geometry={nodes.PaitingsOutside_Painting_0.geometry}

@@ -18,3 +18,9 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.htmlScreen iframe {
+  width: 1024px;
+  height: 600px;
+  border: none;
+}
